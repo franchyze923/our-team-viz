@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Our Team</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <canvas id="stars" aria-hidden="true"></canvas>
+  <div id="globe" aria-label="Interactive globe of team locations"></div>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <header class="brand">
+    <div class="brand-mark" aria-hidden="true"></div>
+    <div>
+      <h1 id="team-name">Our Team</h1>
+      <p id="team-tagline" class="mono">Global presence</p>
+    </div>
+  </header>
+
+  <dl id="stats" class="stats mono"></dl>
+
+  <button id="roster-toggle" class="icon-btn" aria-controls="roster" aria-expanded="false">Team</button>
+
+  <aside id="roster" class="panel" aria-label="Team roster">
+    <div class="search">
+      <input id="search" type="search" placeholder="Search people, roles, cities" autocomplete="off" spellcheck="false" aria-label="Search the team">
+      <kbd>/</kbd>
+    </div>
+    <ul id="roster-list"></ul>
+    <p id="roster-empty" class="empty" hidden>No one matches that search.</p>
+  </aside>
+
+  <aside id="detail" class="panel" aria-live="polite" hidden></aside>
+
+  <div class="hud">
+    <span id="utc" class="mono"></span>
+    <button id="recenter" class="icon-btn" title="Recenter the globe">Recenter</button>
+  </div>
+
+  <div id="loader"><span class="mono">Loading</span></div>
+
+  <script src="vendor/globe.gl.min.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

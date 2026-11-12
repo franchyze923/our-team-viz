@@ -353,7 +353,17 @@ async function main() {
       h(
         'div',
         { class: `photos n${photos.length}` },
-        photos.map((src, i) => h('img', { src, alt: `${member.name}, photo ${i + 1}`, loading: 'lazy' })),
+        photos.map((src, i) =>
+          h(
+            'button',
+            {
+              class: 'photo',
+              'aria-label': `Enlarge photo ${i + 1} of ${photos.length}`,
+              onclick: (e) => openLightbox(photos, i, member.name, e.currentTarget),
+            },
+            h('img', { src, alt: `${member.name}, photo ${i + 1}`, loading: 'lazy' }),
+          ),
+        ),
       ),
       flipButton('Back to profile'),
     ];
@@ -425,6 +435,62 @@ async function main() {
     if (!loc) return;
     detail.replaceChildren(...(member ? renderMember(member) : renderLocation(loc)).filter(Boolean));
     detail.scrollTop = 0;
+  }
+
+  /* --- photo lightbox --- */
+
+  const lightbox = { photos: [], index: 0, name: '', opener: null };
+  const lightboxImg = h('img', { alt: '' });
+  const lightboxCount = h('span', { class: 'mono' });
+  const lightboxPrev = h('button', { class: 'lb-nav prev', 'aria-label': 'Previous photo', onclick: () => stepLightbox(-1) }, '‹');
+  const lightboxNext = h('button', { class: 'lb-nav next', 'aria-label': 'Next photo', onclick: () => stepLightbox(1) }, '›');
+  const lightboxClose = h('button', { class: 'lb-close', 'aria-label': 'Close photo', onclick: () => closeLightbox() }, '×');
+  const lightboxEl = h(
+    'div',
+    {
+      id: 'lightbox',
+      role: 'dialog',
+      'aria-modal': 'true',
+      'aria-label': 'Photo viewer',
+      hidden: true,
+      // a click on the backdrop closes; clicks on the photo or buttons don't
+      onclick: (e) => e.target === lightboxEl && closeLightbox(),
+    },
+    lightboxClose,
+    lightboxPrev,
+    h('figure', {}, lightboxImg, h('figcaption', {}, lightboxCount)),
+    lightboxNext,
+  );
+  document.body.append(lightboxEl);
+
+  const lightboxOpen = () => !lightboxEl.hidden;
+
+  function showLightboxPhoto() {
+    const { photos, index, name } = lightbox;
+    lightboxImg.src = photos[index];
+    lightboxImg.alt = `${name}, photo ${index + 1}`;
+    lightboxCount.textContent = `${name} · ${index + 1} / ${photos.length}`;
+    lightboxPrev.hidden = lightboxNext.hidden = photos.length < 2;
+  }
+
+  function openLightbox(photos, index, name, opener) {
+    Object.assign(lightbox, { photos, index, name, opener });
+    showLightboxPhoto();
+    lightboxEl.hidden = false;
+    lightboxClose.focus();
+  }
+
+  function stepLightbox(delta) {
+    const count = lightbox.photos.length;
+    lightbox.index = (lightbox.index + delta + count) % count;
+    showLightboxPhoto();
+  }
+
+  function closeLightbox() {
+    if (!lightboxOpen()) return;
+    lightboxEl.hidden = true;
+    lightboxImg.removeAttribute('src');
+    if (lightbox.opener?.isConnected) lightbox.opener.focus({ preventScroll: true });
   }
 
   /** Turn the card edge-on, swap profile and photos while it can't be seen, then turn it back. */
@@ -543,6 +609,20 @@ async function main() {
   });
 
   addEventListener('keydown', (e) => {
+    if (lightboxOpen()) {
+      // The viewer is modal: it takes Escape and the arrows, and swallows the page shortcuts.
+      if (e.key === 'Escape') closeLightbox();
+      else if (e.key === 'ArrowLeft') stepLightbox(-1);
+      else if (e.key === 'ArrowRight') stepLightbox(1);
+      else if (e.key === 'Tab') {
+        // keep Tab inside the viewer
+        const stops = [lightboxClose, lightboxPrev, lightboxNext].filter((el) => !el.hidden);
+        const next = stops[(stops.indexOf(document.activeElement) + (e.shiftKey ? -1 : 1) + stops.length) % stops.length];
+        next.focus();
+      } else return;
+      e.preventDefault();
+      return;
+    }
     if (e.key === 'Escape') {
       if (document.activeElement === search && search.value) {
         search.value = state.query = '';

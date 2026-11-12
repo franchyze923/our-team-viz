@@ -14,7 +14,13 @@
       "lat": 39.9526,
       "lng": -75.1652,
       "timezone": "America/New_York",
-      "avatar": "assets/avatars/francis.jpg"
+      "avatar": "assets/avatars/francis.jpg",
+      "photos": [
+        "assets/photos/francis-1.jpg",
+        "assets/photos/francis-2.jpg",
+        "assets/photos/francis-3.jpg",
+        "assets/photos/francis-4.jpg"
+      ]
     },
     {
       "id": "maya-chen",
@@ -33,7 +39,13 @@
         "github": "https://github.com/example",
         "linkedin": "https://www.linkedin.com/"
       },
-      "avatar": "assets/avatars/maya-chen.jpg"
+      "avatar": "assets/avatars/maya-chen.jpg",
+      "photos": [
+        "assets/photos/maya-chen-1.jpg",
+        "assets/photos/maya-chen-2.jpg",
+        "assets/photos/maya-chen-3.jpg",
+        "assets/photos/maya-chen-4.jpg"
+      ]
     },
     {
       "id": "marcus-bell",
@@ -51,7 +63,13 @@
       "links": {
         "github": "https://github.com/example"
       },
-      "avatar": "assets/avatars/marcus-bell.jpg"
+      "avatar": "assets/avatars/marcus-bell.jpg",
+      "photos": [
+        "assets/photos/marcus-bell-1.jpg",
+        "assets/photos/marcus-bell-2.jpg",
+        "assets/photos/marcus-bell-3.jpg",
+        "assets/photos/marcus-bell-4.jpg"
+      ]
     },
     {
       "id": "jasmine-carter",
@@ -69,7 +87,13 @@
       "links": {
         "linkedin": "https://www.linkedin.com/"
       },
-      "avatar": "assets/avatars/jasmine-carter.jpg"
+      "avatar": "assets/avatars/jasmine-carter.jpg",
+      "photos": [
+        "assets/photos/jasmine-carter-1.jpg",
+        "assets/photos/jasmine-carter-2.jpg",
+        "assets/photos/jasmine-carter-3.jpg",
+        "assets/photos/jasmine-carter-4.jpg"
+      ]
     },
     {
       "id": "lucas-ortega",
@@ -87,7 +111,13 @@
       "links": {
         "github": "https://github.com/example"
       },
-      "avatar": "assets/avatars/lucas-ortega.jpg"
+      "avatar": "assets/avatars/lucas-ortega.jpg",
+      "photos": [
+        "assets/photos/lucas-ortega-1.jpg",
+        "assets/photos/lucas-ortega-2.jpg",
+        "assets/photos/lucas-ortega-3.jpg",
+        "assets/photos/lucas-ortega-4.jpg"
+      ]
     }
   ]
 }

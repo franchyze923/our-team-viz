@@ -146,7 +146,7 @@ async function main() {
   const locations = buildLocations(members);
   const locationList = [...locations.values()];
 
-  const state = { memberId: null, locationKey: null, query: '' };
+  const state = { memberId: null, locationKey: null, query: '', showPhotos: false };
   let lastSelectAt = 0;
 
   /* --- header --- */
@@ -324,7 +324,45 @@ async function main() {
     return h('div', {}, h('dt', { class: 'mono' }, label), h('dd', { id }, value));
   }
 
+  /** Up to four extra photos, shown on the back of the profile card. */
+  function photosOf(member) {
+    return (member.photos ?? [])
+      .map((src) => {
+        try {
+          return safeUrl(new URL(src, location.href).href);
+        } catch {
+          return null;
+        }
+      })
+      .filter(Boolean)
+      .slice(0, 4);
+  }
+
+  const flipButton = (label) =>
+    h('button', { class: 'flip-btn', onclick: () => flip() }, h('span', { 'aria-hidden': 'true' }, '⟲'), label);
+
+  function renderPhotos(member, photos) {
+    return [
+      closeButton(),
+      h(
+        'div',
+        { class: 'profile-head' },
+        avatar(member),
+        h('div', {}, h('h2', {}, member.name), h('p', { class: 'mono' }, 'Photos')),
+      ),
+      h(
+        'div',
+        { class: `photos n${photos.length}` },
+        photos.map((src, i) => h('img', { src, alt: `${member.name}, photo ${i + 1}`, loading: 'lazy' })),
+      ),
+      flipButton('Back to profile'),
+    ];
+  }
+
   function renderMember(member) {
+    const photos = photosOf(member);
+    if (state.showPhotos && photos.length > 0) return renderPhotos(member, photos);
+
     const others = locations.get(member.locationKey).members.filter((m) => m !== member);
     const links = [
       member.email && ['Email', safeUrl(`mailto:${member.email}`)],
@@ -360,6 +398,7 @@ async function main() {
             h('a', { href: url, target: '_blank', rel: 'noopener noreferrer' }, name),
           ),
         ),
+      photos.length > 0 && flipButton(photos.length === 1 ? 'View photo' : `View ${photos.length} photos`),
       others.length > 0 && h('h3', { class: 'section-label mono' }, `Also in ${member.city}`),
       others.length > 0 &&
         h('ul', { class: 'detail-list' }, others.map((m) => h('li', {}, personButton(m, m.role ?? place(m))))),
@@ -380,7 +419,44 @@ async function main() {
     ];
   }
 
+  function fillDetail() {
+    const member = membersById.get(state.memberId);
+    const loc = locations.get(member ? member.locationKey : state.locationKey);
+    if (!loc) return;
+    detail.replaceChildren(...(member ? renderMember(member) : renderLocation(loc)).filter(Boolean));
+    detail.scrollTop = 0;
+  }
+
+  /** Turn the card edge-on, swap profile and photos while it can't be seen, then turn it back. */
+  let flipping = false;
+  async function flip() {
+    if (flipping) return;
+    flipping = true;
+    const turn = (from, to, easing, fill = 'none') =>
+      detail.animate(
+        [from, to].map((deg) => ({ transform: `perspective(1400px) rotateY(${deg}deg)` })),
+        { duration: 230, easing, fill },
+      );
+    try {
+      const out = reducedMotion ? null : turn(0, 90, 'ease-in', 'forwards');
+      await out?.finished;
+      state.showPhotos = !state.showPhotos;
+      fillDetail();
+      if (out) {
+        const back = turn(-90, 0, 'ease-out');
+        out.cancel();
+        await back.finished;
+      }
+      detail.querySelector('.flip-btn')?.focus({ preventScroll: true });
+    } catch {
+      // An interrupted animation rejects; the card is already showing the right side.
+    } finally {
+      flipping = false;
+    }
+  }
+
   function render() {
+    state.showPhotos = false;
     const member = membersById.get(state.memberId);
     const loc = locations.get(member ? member.locationKey : state.locationKey);
 
@@ -392,8 +468,7 @@ async function main() {
     detail.hidden = !loc;
     document.body.classList.toggle('has-detail', Boolean(loc));
     if (!loc) return;
-    detail.replaceChildren(...(member ? renderMember(member) : renderLocation(loc)).filter(Boolean));
-    detail.scrollTop = 0;
+    fillDetail();
     // restart the entrance animation
     detail.style.animation = 'none';
     void detail.offsetWidth;

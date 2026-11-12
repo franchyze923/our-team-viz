@@ -340,6 +340,46 @@ ul { list-style: none; }
 .loc-head h2 { font-size: 21px; font-weight: 620; padding-right: 26px; }
 .loc-head p { margin-top: 4px; }
 
+.flip-btn {
+  width: 100%;
+  margin-top: 18px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(77, 232, 255, 0.07);
+  border: 1px solid var(--line-strong);
+  border-radius: 9px;
+  color: var(--cyan);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: background 0.15s, border-color 0.15s;
+}
+.flip-btn:hover { background: rgba(77, 232, 255, 0.15); border-color: var(--cyan); }
+.flip-btn span { font-size: 15px; line-height: 1; }
+
+.photos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 18px;
+}
+.photos img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--panel-solid);
+}
+.photos.n1 { grid-template-columns: 1fr; }
+.photos.n2 img { aspect-ratio: 3 / 4; }
+.photos.n3 img:first-child { grid-column: span 2; aspect-ratio: 2 / 1; }
+
 /* ---------- globe pins ---------- */
 
 .pin {

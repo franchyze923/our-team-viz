@@ -31,6 +31,7 @@ Everything comes from `data/team.json`. Everyone in it except Francis is a ficti
 | `timezone` | IANA name such as `America/Chicago`. Drives the live local time. |
 | `links` | Optional `github` / `linkedin` URLs (any other key is shown by its name). |
 | `avatar` | Optional image URL or path, e.g. `assets/avatars/francis.jpg`. Square images work best. Initials are used when it is absent. |
+| `photos` | Optional list of up to four image URLs or paths. They appear on the back of the profile card. |
 
 The starting camera position is `HOME` at the top of `js/app.js`.
 
@@ -42,6 +43,7 @@ css/styles.css    theme and layout
 js/app.js         globe, roster, profile panel
 data/team.json    the team
 assets/avatars/   profile photos, named by member id
+assets/photos/    extra photos for the back of each card
 vendor/           globe.gl 2.46.2 and Natural Earth country outlines
 ```
 

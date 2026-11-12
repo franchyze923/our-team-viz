@@ -27,7 +27,7 @@ Everything comes from `data/team.json`. Everyone in it except Francis is a ficti
 | `name` | Required. |
 | `role`, `team`, `bio`, `email`, `region` | Optional. |
 | `city`, `country` | Shown in the profile and used by search. |
-| `lat`, `lng` | Decimal degrees. People within about 10 km share one pin. |
+| `lat`, `lng` | Decimal degrees. People within about 10 km share one pin, and nearby cities merge into one counted pin until you zoom in far enough to tell them apart. |
 | `timezone` | IANA name such as `America/Chicago`. Drives the live local time. |
 | `links` | Optional `github` / `linkedin` URLs (any other key is shown by its name). |
 | `avatar` | Optional image URL or path, e.g. `assets/avatars/francis.jpg`. Square images work best. Initials are used when it is absent. |

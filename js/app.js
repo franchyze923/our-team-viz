@@ -146,7 +146,8 @@ async function main() {
   const locations = buildLocations(members);
   const locationList = [...locations.values()];
 
-  const state = { memberId: null, locationKey: null, query: '', showPhotos: false };
+  // `places` holds the city keys of an open group panel (a pin with several people).
+  const state = { memberId: null, places: null, query: '', showPhotos: false };
   let lastSelectAt = 0;
 
   /* --- header --- */
@@ -165,35 +166,126 @@ async function main() {
     stat('Time zones', new Set(members.map((m) => m.timezone)).size),
   );
 
-  /* --- pins --- */
+  /* --- pins: nearby cities share one pin until the camera is close enough to tell them apart --- */
 
-  for (const loc of locationList) {
-    const count = loc.members.length;
-    const label = count > 1 ? `${loc.city}, ${count} people` : `${loc.members[0].name}, ${loc.city}`;
-    loc.el = h(
+  const PIN_GAP_PX = 26; // closer than this on screen and two cities merge
+  const MIN_ALTITUDE = 0.1;
+  const toRad = Math.PI / 180;
+
+  /** Great-circle distance in degrees. */
+  function arcDeg(a, b) {
+    const dLat = (b.lat - a.lat) * toRad;
+    const dLng = (b.lng - a.lng) * toRad;
+    const x =
+      Math.sin(dLat / 2) ** 2 + Math.cos(a.lat * toRad) * Math.cos(b.lat * toRad) * Math.sin(dLng / 2) ** 2;
+    return (2 * Math.asin(Math.min(1, Math.sqrt(x)))) / toRad;
+  }
+
+  /** Degrees of arc that PIN_GAP_PX spans at the centre of the view, per unit of camera altitude. */
+  function mergeDegPerAltitude() {
+    const focalPx = innerHeight / 2 / Math.tan((globe.camera().fov / 2) * toRad);
+    return PIN_GAP_PX / focalPx / toRad;
+  }
+
+  const placesBySize = [...locationList].sort(
+    (a, b) => b.members.length - a.members.length || a.city.localeCompare(b.city) || a.key.localeCompare(b.key),
+  );
+  const clusterCache = new Map();
+  const clusterOfPlace = new Map();
+  let clusters = [];
+  let clusterSignature = null;
+
+  function makeCluster(key, places) {
+    const clusterMembers = places.flatMap((p) => p.members);
+    const count = clusterMembers.length;
+    const [main] = places;
+    const cities = places.map((p) => p.city);
+    const label =
+      count === 1 ? clusterMembers[0].name : places.length === 1 ? main.city : `${main.city} +${places.length - 1}`;
+    const spoken =
+      count === 1
+        ? `${clusterMembers[0].name}, ${main.city}`
+        : `${cities.join(' and ')}, ${count} people`;
+
+    const el = h(
       'div',
       { class: `pin${count > 1 ? ' multi' : ''}` },
       h(
         'button',
         {
           class: 'pin-dot',
-          'aria-label': label,
-          onclick: (e) => {
-            e.stopPropagation();
-            if (count === 1) selectMember(loc.members[0].id);
-            else selectLocation(loc.key);
+          'aria-label': spoken,
+          onclick: () => {
+            if (count === 1) selectMember(clusterMembers[0].id);
+            else selectGroup(places.map((p) => p.key));
           },
         },
         count > 1 ? String(count) : null,
       ),
-      h('span', { class: 'pin-label mono' }, count > 1 ? loc.city : loc.members[0].name),
+      h('span', { class: 'pin-label mono' }, label),
     );
-    loc.el.style.pointerEvents = 'auto';
+    el.style.pointerEvents = 'auto';
     // The globe listens for pointer events on the shared container and would treat a press on a
     // pin as a click on the globe underneath it, which clears the selection a frame later.
     for (const type of ['pointerdown', 'pointerup', 'click']) {
-      loc.el.addEventListener(type, (e) => e.stopPropagation());
+      el.addEventListener(type, (e) => e.stopPropagation());
     }
+
+    return {
+      key,
+      places,
+      members: clusterMembers,
+      lat: places.reduce((sum, p) => sum + p.lat * p.members.length, 0) / count,
+      lng: places.reduce((sum, p) => sum + p.lng * p.members.length, 0) / count,
+      el,
+    };
+  }
+
+  function markPins() {
+    const member = membersById.get(state.memberId);
+    const active = new Set(member ? [member.locationKey] : (state.places ?? []));
+    for (const cluster of clusters) {
+      cluster.el.classList.toggle('active', cluster.places.some((p) => active.has(p.key)));
+    }
+  }
+
+  /** Regroup cities for the given camera altitude; touches the globe only when the grouping changes. */
+  function recluster(altitude) {
+    const limit = altitude * mergeDegPerAltitude();
+    const groups = [];
+    for (const place of placesBySize) {
+      const home = groups.find((group) => arcDeg(group[0], place) < limit);
+      if (home) home.push(place);
+      else groups.push([place]);
+    }
+    const signature = groups.map((g) => g.map((p) => p.key).join('|')).join(';');
+    if (signature === clusterSignature) return;
+    clusterSignature = signature;
+
+    clusters = groups.map((group) => {
+      const key = group.map((p) => p.key).join('|');
+      if (!clusterCache.has(key)) clusterCache.set(key, makeCluster(key, group));
+      return clusterCache.get(key);
+    });
+    clusterOfPlace.clear();
+    for (const cluster of clusters) {
+      cluster.el.classList.remove('hover');
+      for (const place of cluster.places) clusterOfPlace.set(place.key, cluster);
+    }
+    globe.htmlElementsData(clusters).ringsData(clusters);
+    markPins();
+  }
+
+  /** How close the camera must be for every one of these cities to get its own pin. */
+  function altitudeToSeparate(places, others = locationList) {
+    let nearest = Infinity;
+    for (const place of places) {
+      for (const other of others) {
+        if (other !== place) nearest = Math.min(nearest, arcDeg(place, other));
+      }
+    }
+    const cap = isNarrow() ? 1.4 : FOCUS_ALTITUDE;
+    return Math.max(MIN_ALTITUDE, Math.min(cap, (nearest / mergeDegPerAltitude()) * 0.8));
   }
 
   /* --- globe --- */
@@ -220,7 +312,6 @@ async function main() {
     .hexPolygonAltitude(0.004)
     .hexPolygonColor(() => 'rgba(88, 196, 255, 0.62)')
     // pulses under each pin
-    .ringsData(locationList)
     .ringColor(() => (t) => `rgba(77, 232, 255, ${(1 - t) * 0.8})`)
     .ringMaxRadius((d) => 2.2 + Math.min(d.members.length, 4) * 0.5)
     .ringPropagationSpeed(1.4)
@@ -235,7 +326,6 @@ async function main() {
     .arcDashGap(0.25)
     .arcDashAnimateTime(reducedMotion ? 0 : 4200)
     // clickable pins
-    .htmlElementsData(locationList)
     .htmlElement((d) => d.el)
     .htmlAltitude(0.012)
     .htmlElementVisibilityModifier((el, visible) => {
@@ -248,8 +338,14 @@ async function main() {
     })
     .pointOfView(homeView(), 0);
 
-  // Re-apply the view once the first frame is drawn so pin visibility is recalculated.
-  requestAnimationFrame(() => globe.pointOfView(homeView(), 0));
+  recluster(homeView().altitude);
+  globe.onZoom(({ altitude }) => recluster(altitude));
+
+  // Re-apply the view once the first frame is drawn so pin visibility is recalculated. Skipped when
+  // a profile link is already flying the camera somewhere, which recalculates it anyway.
+  requestAnimationFrame(() => {
+    if (!state.memberId && !state.places) globe.pointOfView(homeView(), 0);
+  });
 
   const material = globe.globeMaterial();
   material.color.set('#050b1d');
@@ -259,11 +355,12 @@ async function main() {
 
   const controls = globe.controls();
   controls.enableDamping = true;
-  controls.minDistance = 130;
+  controls.minDistance = globe.getGlobeRadius() * (1 + MIN_ALTITUDE * 0.8);
   controls.maxDistance = 520;
 
   const fit = () => {
     globe.width(innerWidth).height(innerHeight);
+    recluster(globe.pointOfView().altitude);
     drawStars();
   };
   addEventListener('resize', fit);
@@ -280,8 +377,8 @@ async function main() {
       {
         class: 'person',
         onclick: () => selectMember(member.id),
-        onmouseenter: () => locations.get(member.locationKey).el.classList.add('hover'),
-        onmouseleave: () => locations.get(member.locationKey).el.classList.remove('hover'),
+        onmouseenter: () => clusterOfPlace.get(member.locationKey)?.el.classList.add('hover'),
+        onmouseleave: () => clusterOfPlace.get(member.locationKey)?.el.classList.remove('hover'),
       },
       avatar(member),
       h(
@@ -415,25 +512,40 @@ async function main() {
     ];
   }
 
-  function renderLocation(loc) {
+  function renderGroup(places) {
+    const single = places.length === 1;
+    const people = places.flatMap((p) => p.members).sort((a, b) => a.name.localeCompare(b.name));
+    const title = single
+      ? place(places[0])
+      : places.length === 2
+        ? places.map((p) => p.city).join(' + ')
+        : `${places.length} nearby cities`;
     return [
       closeButton(),
       h(
         'div',
         { class: 'loc-head' },
-        h('h2', {}, place(loc)),
-        h('p', { class: 'mono' }, `${loc.country} · ${loc.members.length} people`),
+        h('h2', {}, title),
+        h('p', { class: 'mono' }, [single && places[0].country, `${people.length} people`].filter(Boolean).join(' · ')),
       ),
       h('h3', { class: 'section-label mono' }, 'Based here'),
-      h('ul', { class: 'detail-list' }, loc.members.map((m) => h('li', {}, personButton(m, m.role ?? place(m))))),
+      h(
+        'ul',
+        { class: 'detail-list' },
+        people.map((m) =>
+          h('li', {}, personButton(m, single ? (m.role ?? place(m)) : [m.role, m.city].filter(Boolean).join(' · '))),
+        ),
+      ),
     ];
   }
 
+  const selectedPlaces = () => (state.places ?? []).map((key) => locations.get(key)).filter(Boolean);
+
   function fillDetail() {
     const member = membersById.get(state.memberId);
-    const loc = locations.get(member ? member.locationKey : state.locationKey);
-    if (!loc) return;
-    detail.replaceChildren(...(member ? renderMember(member) : renderLocation(loc)).filter(Boolean));
+    const places = selectedPlaces();
+    if (!member && places.length === 0) return;
+    detail.replaceChildren(...(member ? renderMember(member) : renderGroup(places)).filter(Boolean));
     detail.scrollTop = 0;
   }
 
@@ -523,17 +635,16 @@ async function main() {
 
   function render() {
     state.showPhotos = false;
-    const member = membersById.get(state.memberId);
-    const loc = locations.get(member ? member.locationKey : state.locationKey);
+    const open = membersById.has(state.memberId) || selectedPlaces().length > 0;
 
     for (const [id, item] of rosterItems) {
       item.firstChild.classList.toggle('active', id === state.memberId);
     }
-    for (const l of locationList) l.el.classList.toggle('active', l === loc);
+    markPins();
 
-    detail.hidden = !loc;
-    document.body.classList.toggle('has-detail', Boolean(loc));
-    if (!loc) return;
+    detail.hidden = !open;
+    document.body.classList.toggle('has-detail', open);
+    if (!open) return;
     fillDetail();
     // restart the entrance animation
     detail.style.animation = 'none';
@@ -546,10 +657,10 @@ async function main() {
     $('#roster-toggle').setAttribute('aria-expanded', 'false');
   }
 
-  function flyTo(loc) {
+  function flyTo({ lat, lng }, altitude) {
     // On phones the profile sheet covers the lower part of the screen, so aim a little south.
-    const lat = isNarrow() ? loc.lat - 14 : loc.lat;
-    globe.pointOfView({ lat, lng: loc.lng, altitude: isNarrow() ? 1.4 : FOCUS_ALTITUDE }, ms(1300));
+    const aimLat = isNarrow() ? lat - 10 * altitude : lat;
+    globe.pointOfView({ lat: aimLat, lng, altitude }, ms(1300));
   }
 
   function setHash(value) {
@@ -561,31 +672,36 @@ async function main() {
     const member = membersById.get(id);
     if (!member) return;
     state.memberId = id;
-    state.locationKey = member.locationKey;
+    state.places = null;
     lastSelectAt = performance.now();
     setHash(id);
     closeRoster();
     render();
     rosterItems.get(id).scrollIntoView({ block: 'nearest' });
-    if (fly) flyTo(locations.get(member.locationKey));
+    const home = locations.get(member.locationKey);
+    // Zoom far enough that this person's city has a pin of its own.
+    if (fly) flyTo(home, altitudeToSeparate([home]));
   }
 
-  function selectLocation(key) {
-    const loc = locations.get(key);
-    if (!loc) return;
+  /** Open the list of people behind a pin that stands for several of them. */
+  function selectGroup(placeKeys) {
+    const places = placeKeys.map((key) => locations.get(key)).filter(Boolean);
+    if (places.length === 0) return;
     state.memberId = null;
-    state.locationKey = key;
+    state.places = places.map((p) => p.key);
     lastSelectAt = performance.now();
     setHash('');
     closeRoster();
     render();
-    flyTo(loc);
+    const cluster = clusterCache.get(state.places.join('|')) ?? places[0];
+    // A pin covering several cities zooms in until they come apart.
+    flyTo(cluster, places.length > 1 ? altitudeToSeparate(places, places) : altitudeToSeparate(places));
   }
 
   function clearSelection() {
-    if (!state.memberId && !state.locationKey) return;
+    if (!state.memberId && !state.places) return;
     state.memberId = null;
-    state.locationKey = null;
+    state.places = null;
     setHash('');
     render();
   }

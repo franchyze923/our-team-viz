@@ -166,6 +166,104 @@
         "assets/photos/priya-raman-3.jpg",
         "assets/photos/priya-raman-4.jpg"
       ]
+    },
+    {
+      "id": "amara-okafor",
+      "name": "Amara Okafor",
+      "role": "Senior Software Engineer",
+      "team": "Core Services",
+      "city": "Philadelphia",
+      "region": "PA",
+      "country": "United States",
+      "lat": 39.9526,
+      "lng": -75.1652,
+      "timezone": "America/New_York",
+      "bio": "Works on APIs and the event bus. Mentor for the internship program. Collects mechanical keyboards.",
+      "email": "amara.okafor@example.com",
+      "links": {
+        "github": "https://github.com/example",
+        "linkedin": "https://www.linkedin.com/"
+      },
+      "avatar": "assets/avatars/amara-okafor.jpg",
+      "photos": [
+        "assets/photos/amara-okafor-1.jpg",
+        "assets/photos/amara-okafor-2.jpg",
+        "assets/photos/amara-okafor-3.jpg",
+        "assets/photos/amara-okafor-4.jpg"
+      ]
+    },
+    {
+      "id": "tom-gallagher",
+      "name": "Tom Gallagher",
+      "role": "Machine Learning Engineer",
+      "team": "Data",
+      "city": "Philadelphia",
+      "region": "PA",
+      "country": "United States",
+      "lat": 39.9526,
+      "lng": -75.1652,
+      "timezone": "America/New_York",
+      "bio": "Ranking, retrieval, and evaluation. Rows on the Schuylkill before standup.",
+      "email": "tom.gallagher@example.com",
+      "links": {
+        "github": "https://github.com/example"
+      },
+      "avatar": "assets/avatars/tom-gallagher.jpg",
+      "photos": [
+        "assets/photos/tom-gallagher-1.jpg",
+        "assets/photos/tom-gallagher-2.jpg",
+        "assets/photos/tom-gallagher-3.jpg",
+        "assets/photos/tom-gallagher-4.jpg"
+      ]
+    },
+    {
+      "id": "sofia-nguyen",
+      "name": "Sofia Nguyen",
+      "role": "Frontend Engineer",
+      "team": "Web",
+      "city": "Orlando",
+      "region": "FL",
+      "country": "United States",
+      "lat": 28.5384,
+      "lng": -81.3789,
+      "timezone": "America/New_York",
+      "bio": "Builds the web app and the design system behind it. Accessibility advocate.",
+      "email": "sofia.nguyen@example.com",
+      "links": {
+        "github": "https://github.com/example",
+        "linkedin": "https://www.linkedin.com/"
+      },
+      "avatar": "assets/avatars/sofia-nguyen.jpg",
+      "photos": [
+        "assets/photos/sofia-nguyen-1.jpg",
+        "assets/photos/sofia-nguyen-2.jpg",
+        "assets/photos/sofia-nguyen-3.jpg",
+        "assets/photos/sofia-nguyen-4.jpg"
+      ]
+    },
+    {
+      "id": "eli-kowalski",
+      "name": "Eli Kowalski",
+      "role": "Data Engineer",
+      "team": "Data",
+      "city": "Orlando",
+      "region": "FL",
+      "country": "United States",
+      "lat": 28.5384,
+      "lng": -81.3789,
+      "timezone": "America/New_York",
+      "bio": "Pipelines, warehouses, and the occasional heroic backfill. Cyclist in every season, including the bad ones.",
+      "email": "eli.kowalski@example.com",
+      "links": {
+        "github": "https://github.com/example"
+      },
+      "avatar": "assets/avatars/eli-kowalski.jpg",
+      "photos": [
+        "assets/photos/eli-kowalski-1.jpg",
+        "assets/photos/eli-kowalski-2.jpg",
+        "assets/photos/eli-kowalski-3.jpg",
+        "assets/photos/eli-kowalski-4.jpg"
+      ]
     }
   ]
 }

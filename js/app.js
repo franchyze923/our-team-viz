@@ -668,7 +668,7 @@ async function main() {
     history.replaceState(null, '', url);
   }
 
-  function selectMember(id, { fly = true } = {}) {
+  function selectMember(id) {
     const member = membersById.get(id);
     if (!member) return;
     state.memberId = id;
@@ -680,7 +680,7 @@ async function main() {
     rosterItems.get(id).scrollIntoView({ block: 'nearest' });
     const home = locations.get(member.locationKey);
     // Zoom far enough that this person's city has a pin of its own.
-    if (fly) flyTo(home, altitudeToSeparate([home]));
+    flyTo(home, altitudeToSeparate([home]));
   }
 
   /** Open the list of people behind a pin that stands for several of them. */

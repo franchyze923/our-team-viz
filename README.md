@@ -20,7 +20,7 @@ podman run --rm -p 8080:8080 our-team-viz
 
 ## Edit the team
 
-Everything comes from `data/team.json`. Everyone in it except Francis is a fictional placeholder. 
+Everything comes from `data/team.json`. 
 | Field | Notes |
 | --- | --- |
 | `id` | Unique slug. Also the deep link: `/#maya-chen` opens that profile. |
@@ -34,6 +34,10 @@ Everything comes from `data/team.json`. Everyone in it except Francis is a ficti
 | `photos` | Optional list of up to four image URLs or paths. They appear on the back of the profile card. |
 
 The starting camera position is `HOME` at the top of `js/app.js`.
+
+Everyone except Francis is fictional. The headshots in `assets/avatars/` are placeholder portraits from
+randomuser.me and the pictures in `assets/photos/` are placeholders from picsum.photos; replace both with real
+ones before this represents actual people.
 
 ## Layout
 

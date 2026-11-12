@@ -203,7 +203,11 @@ async function main() {
     .filter((loc) => loc !== hub)
     .map((loc) => ({ startLat: hub.lat, startLng: hub.lng, endLat: loc.lat, endLng: loc.lng }));
 
-  const globe = new Globe($('#globe'), { animateIn: !reducedMotion })
+  const globe = new Globe($('#globe'), {
+    // The library's intro animation scales the scene up from zero, and pin visibility is worked out
+    // against that shrunken scene and not refreshed until the camera moves, hiding off-centre pins.
+    animateIn: false,
+  })
     .backgroundColor('rgba(0,0,0,0)')
     .showAtmosphere(true)
     .atmosphereColor('#3fd9ff')
@@ -242,6 +246,7 @@ async function main() {
       // Ignore a globe click that lands right after a selection was made.
       if (performance.now() - lastSelectAt > 400) clearSelection();
     })
+    .onGlobeReady(() => globe.pointOfView(homeView(), 0))
     .pointOfView(homeView(), 0);
 
   const material = globe.globeMaterial();

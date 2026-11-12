@@ -724,6 +724,40 @@ async function main() {
     e.currentTarget.setAttribute('aria-expanded', String(open));
   });
 
+  // A trackpad pinch arrives as a ctrl+wheel event. Over the canvas the globe handles it, but over a
+  // pin or a panel the browser would magnify the whole page instead, pushing the panels off screen.
+  const canvas = globe.renderer().domElement;
+  addEventListener(
+    'wheel',
+    (e) => {
+      if (e.target === canvas) return;
+      const overPin = e.target instanceof Element && e.target.closest('.pin');
+      if (overPin) {
+        // Pins float above the globe, so scrolling or pinching on one should zoom the globe.
+        e.preventDefault();
+        canvas.dispatchEvent(
+          new WheelEvent('wheel', {
+            deltaX: e.deltaX,
+            deltaY: e.deltaY,
+            deltaMode: e.deltaMode,
+            clientX: e.clientX,
+            clientY: e.clientY,
+            ctrlKey: e.ctrlKey,
+            bubbles: true,
+            cancelable: true,
+          }),
+        );
+      } else if (e.ctrlKey) {
+        e.preventDefault();
+      }
+    },
+    { passive: false, capture: true },
+  );
+  // Safari reports pinches as gesture events.
+  for (const type of ['gesturestart', 'gesturechange']) {
+    document.addEventListener(type, (e) => e.preventDefault(), { passive: false });
+  }
+
   addEventListener('keydown', (e) => {
     if (lightboxOpen()) {
       // The viewer is modal: it takes Escape and the arrows, and swallows the page shortcuts.

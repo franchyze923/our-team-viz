@@ -34,6 +34,10 @@ body {
     var(--bg);
 }
 
+/* touch screens: allow scrolling lists, but not pinch-zooming the page itself */
+html { touch-action: pan-x pan-y; }
+#globe { touch-action: none; }
+
 button, input { font: inherit; color: inherit; }
 button { cursor: pointer; }
 h1, h2, h3, p, ul, dl, dd { margin: 0; padding: 0; }

@@ -118,6 +118,54 @@
         "assets/photos/lucas-ortega-3.jpg",
         "assets/photos/lucas-ortega-4.jpg"
       ]
+    },
+    {
+      "id": "noah-feldman",
+      "name": "Noah Feldman",
+      "role": "Security Engineer",
+      "team": "Security",
+      "city": "Suffolk",
+      "region": "VA",
+      "country": "United States",
+      "lat": 36.7282,
+      "lng": -76.5836,
+      "timezone": "America/New_York",
+      "bio": "Identity, access, and threat modeling. Runs the internal capture-the-flag every quarter.",
+      "email": "noah.feldman@example.com",
+      "links": {
+        "github": "https://github.com/example"
+      },
+      "avatar": "assets/avatars/noah-feldman.jpg",
+      "photos": [
+        "assets/photos/noah-feldman-1.jpg",
+        "assets/photos/noah-feldman-2.jpg",
+        "assets/photos/noah-feldman-3.jpg",
+        "assets/photos/noah-feldman-4.jpg"
+      ]
+    },
+    {
+      "id": "priya-raman",
+      "name": "Priya Raman",
+      "role": "Product Designer",
+      "team": "Design",
+      "city": "Sunnyvale",
+      "region": "CA",
+      "country": "United States",
+      "lat": 37.3688,
+      "lng": -122.0363,
+      "timezone": "America/Los_Angeles",
+      "bio": "Designs the product end to end, from research through motion. Believes every empty state is an opportunity.",
+      "email": "priya.raman@example.com",
+      "links": {
+        "linkedin": "https://www.linkedin.com/"
+      },
+      "avatar": "assets/avatars/priya-raman.jpg",
+      "photos": [
+        "assets/photos/priya-raman-1.jpg",
+        "assets/photos/priya-raman-2.jpg",
+        "assets/photos/priya-raman-3.jpg",
+        "assets/photos/priya-raman-4.jpg"
+      ]
     }
   ]
 }

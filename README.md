@@ -20,13 +20,12 @@ podman run --rm -p 8080:8080 our-team-viz
 
 ## Edit the team
 
-Everything comes from `data/team.json`. The people in it now are fictional placeholders.
-
+Everything comes from `data/team.json`. 
 | Field | Notes |
 | --- | --- |
 | `id` | Unique slug. Also the deep link: `/#maya-chen` opens that profile. |
-| `name`, `role` | Required. |
-| `team`, `bio`, `email`, `region` | Optional. |
+| `name` | Required. |
+| `role`, `team`, `bio`, `email`, `region` | Optional. |
 | `city`, `country` | Shown in the profile and used by search. |
 | `lat`, `lng` | Decimal degrees. People within about 10 km share one pin. |
 | `timezone` | IANA name such as `America/Chicago`. Drives the live local time. |

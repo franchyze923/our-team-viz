@@ -278,7 +278,7 @@ async function main() {
   }
 
   for (const member of members) {
-    const item = h('li', {}, personButton(member, `${member.role} · ${member.city}`));
+    const item = h('li', {}, personButton(member, [member.role, place(member)].filter(Boolean).join(' · ')));
     rosterItems.set(member.id, item);
     rosterList.append(item);
   }
@@ -324,7 +324,7 @@ async function main() {
         'div',
         { class: 'profile-head' },
         avatar(member, true),
-        h('div', {}, h('h2', {}, member.name), h('p', { class: 'profile-role' }, member.role)),
+        h('div', {}, h('h2', {}, member.name), member.role && h('p', { class: 'profile-role' }, member.role)),
       ),
       member.team && h('span', { class: 'chip mono' }, member.team),
       h(
@@ -346,7 +346,7 @@ async function main() {
         ),
       others.length > 0 && h('h3', { class: 'section-label mono' }, `Also in ${member.city}`),
       others.length > 0 &&
-        h('ul', { class: 'detail-list' }, others.map((m) => h('li', {}, personButton(m, m.role)))),
+        h('ul', { class: 'detail-list' }, others.map((m) => h('li', {}, personButton(m, m.role ?? place(m))))),
     ];
   }
 
@@ -360,7 +360,7 @@ async function main() {
         h('p', { class: 'mono' }, `${loc.country} · ${loc.members.length} people`),
       ),
       h('h3', { class: 'section-label mono' }, 'Based here'),
-      h('ul', { class: 'detail-list' }, loc.members.map((m) => h('li', {}, personButton(m, m.role)))),
+      h('ul', { class: 'detail-list' }, loc.members.map((m) => h('li', {}, personButton(m, m.role ?? place(m))))),
     ];
   }
 

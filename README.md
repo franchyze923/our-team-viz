@@ -20,7 +20,7 @@ podman run --rm -p 8080:8080 our-team-viz
 
 ## Edit the team
 
-Everything comes from `data/team.json`. 
+Everything comes from `data/team.json`. Everyone in it except Francis is a fictional placeholder. 
 | Field | Notes |
 | --- | --- |
 | `id` | Unique slug. Also the deep link: `/#maya-chen` opens that profile. |

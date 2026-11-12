@@ -34,121 +34,18 @@
       }
     },
     {
-      "id": "devon-brooks",
-      "name": "Devon Brooks",
-      "role": "Staff Software Engineer",
-      "team": "Platform",
-      "city": "San Francisco",
-      "region": "CA",
-      "country": "United States",
-      "lat": 37.7749,
-      "lng": -122.4194,
-      "timezone": "America/Los_Angeles",
-      "bio": "Kubernetes, networking, and anything with a packet capture. Maintains the internal developer platform.",
-      "email": "devon.brooks@example.com",
-      "links": {
-        "github": "https://github.com/example"
-      }
-    },
-    {
-      "id": "priya-raman",
-      "name": "Priya Raman",
-      "role": "Product Designer",
-      "team": "Design",
-      "city": "Seattle",
-      "region": "WA",
-      "country": "United States",
-      "lat": 47.6062,
-      "lng": -122.3321,
-      "timezone": "America/Los_Angeles",
-      "bio": "Designs the product end to end, from research through motion. Believes every empty state is an opportunity.",
-      "email": "priya.raman@example.com",
-      "links": {
-        "linkedin": "https://www.linkedin.com/"
-      }
-    },
-    {
-      "id": "lucas-ortega",
-      "name": "Lucas Ortega",
-      "role": "Site Reliability Engineer",
-      "team": "Infrastructure",
-      "city": "Denver",
-      "region": "CO",
-      "country": "United States",
-      "lat": 39.7392,
-      "lng": -104.9903,
-      "timezone": "America/Denver",
-      "bio": "Keeps the lights on and the pager quiet. Observability nerd, weekend snowboarder.",
-      "email": "lucas.ortega@example.com",
-      "links": {
-        "github": "https://github.com/example"
-      }
-    },
-    {
-      "id": "hannah-whitfield",
-      "name": "Hannah Whitfield",
-      "role": "Director of Engineering",
-      "team": "Leadership",
-      "city": "Austin",
-      "region": "TX",
-      "country": "United States",
-      "lat": 30.2672,
-      "lng": -97.7431,
-      "timezone": "America/Chicago",
-      "bio": "Runs engineering. Fifteen years building distributed teams. Will talk about barbecue for as long as you let her.",
-      "email": "hannah.whitfield@example.com",
-      "links": {
-        "linkedin": "https://www.linkedin.com/"
-      }
-    },
-    {
       "id": "marcus-bell",
       "name": "Marcus Bell",
       "role": "Senior Backend Engineer",
       "team": "Core Services",
-      "city": "Austin",
+      "city": "Dallas",
       "region": "TX",
       "country": "United States",
-      "lat": 30.2672,
-      "lng": -97.7431,
+      "lat": 32.7767,
+      "lng": -96.797,
       "timezone": "America/Chicago",
       "bio": "Go and Postgres. Owns the billing and identity services. Plays bass in a band you have not heard of.",
       "email": "marcus.bell@example.com",
-      "links": {
-        "github": "https://github.com/example"
-      }
-    },
-    {
-      "id": "sofia-nguyen",
-      "name": "Sofia Nguyen",
-      "role": "Frontend Engineer",
-      "team": "Web",
-      "city": "Austin",
-      "region": "TX",
-      "country": "United States",
-      "lat": 30.2672,
-      "lng": -97.7431,
-      "timezone": "America/Chicago",
-      "bio": "Builds the web app and the design system behind it. Accessibility advocate.",
-      "email": "sofia.nguyen@example.com",
-      "links": {
-        "github": "https://github.com/example",
-        "linkedin": "https://www.linkedin.com/"
-      }
-    },
-    {
-      "id": "eli-kowalski",
-      "name": "Eli Kowalski",
-      "role": "Data Engineer",
-      "team": "Data",
-      "city": "Chicago",
-      "region": "IL",
-      "country": "United States",
-      "lat": 41.8781,
-      "lng": -87.6298,
-      "timezone": "America/Chicago",
-      "bio": "Pipelines, warehouses, and the occasional heroic backfill. Cyclist in every season, including the bad ones.",
-      "email": "eli.kowalski@example.com",
       "links": {
         "github": "https://github.com/example"
       }
@@ -158,11 +55,11 @@
       "name": "Jasmine Carter",
       "role": "Product Manager",
       "team": "Product",
-      "city": "Atlanta",
-      "region": "GA",
+      "city": "Orlando",
+      "region": "FL",
       "country": "United States",
-      "lat": 33.749,
-      "lng": -84.388,
+      "lat": 28.5384,
+      "lng": -81.3789,
       "timezone": "America/New_York",
       "bio": "Owns the roadmap for the core product. Former support lead, so she has read every ticket you are thinking of.",
       "email": "jasmine.carter@example.com",
@@ -171,135 +68,18 @@
       }
     },
     {
-      "id": "noah-feldman",
-      "name": "Noah Feldman",
-      "role": "Security Engineer",
-      "team": "Security",
-      "city": "New York",
-      "region": "NY",
-      "country": "United States",
-      "lat": 40.7128,
-      "lng": -74.006,
-      "timezone": "America/New_York",
-      "bio": "Identity, access, and threat modeling. Runs the internal capture-the-flag every quarter.",
-      "email": "noah.feldman@example.com",
-      "links": {
-        "github": "https://github.com/example"
-      }
-    },
-    {
-      "id": "amara-okafor",
-      "name": "Amara Okafor",
-      "role": "Senior Software Engineer",
-      "team": "Core Services",
-      "city": "New York",
-      "region": "NY",
-      "country": "United States",
-      "lat": 40.7128,
-      "lng": -74.006,
-      "timezone": "America/New_York",
-      "bio": "Works on APIs and the event bus. Mentor for the internship program. Collects mechanical keyboards.",
-      "email": "amara.okafor@example.com",
-      "links": {
-        "github": "https://github.com/example",
-        "linkedin": "https://www.linkedin.com/"
-      }
-    },
-    {
-      "id": "tom-gallagher",
-      "name": "Tom Gallagher",
-      "role": "Machine Learning Engineer",
-      "team": "Data",
-      "city": "Boston",
-      "region": "MA",
-      "country": "United States",
-      "lat": 42.3601,
-      "lng": -71.0589,
-      "timezone": "America/New_York",
-      "bio": "Ranking, retrieval, and evaluation. Rows on the Charles before standup.",
-      "email": "tom.gallagher@example.com",
-      "links": {
-        "github": "https://github.com/example"
-      }
-    },
-    {
-      "id": "claire-tremblay",
-      "name": "Claire Tremblay",
-      "role": "Engineering Program Manager",
-      "team": "Leadership",
-      "city": "Toronto",
-      "region": "ON",
-      "country": "Canada",
-      "lat": 43.6532,
-      "lng": -79.3832,
-      "timezone": "America/Toronto",
-      "bio": "Keeps cross-team launches on the rails. Bilingual, and a fierce defender of the written decision record.",
-      "email": "claire.tremblay@example.com",
-      "links": {
-        "linkedin": "https://www.linkedin.com/"
-      }
-    },
-    {
-      "id": "oliver-hughes",
-      "name": "Oliver Hughes",
-      "role": "Solutions Architect",
-      "team": "Customer Engineering",
-      "city": "London",
-      "country": "United Kingdom",
-      "lat": 51.5074,
-      "lng": -0.1278,
-      "timezone": "Europe/London",
-      "bio": "First call for European customers. Translates between what was asked for and what is needed.",
-      "email": "oliver.hughes@example.com",
-      "links": {
-        "linkedin": "https://www.linkedin.com/"
-      }
-    },
-    {
-      "id": "lena-vogel",
-      "name": "Lena Vogel",
-      "role": "Senior Infrastructure Engineer",
+      "id": "lucas-ortega",
+      "name": "Lucas Ortega",
+      "role": "Site Reliability Engineer",
       "team": "Infrastructure",
-      "city": "Berlin",
-      "country": "Germany",
-      "lat": 52.52,
-      "lng": 13.405,
-      "timezone": "Europe/Berlin",
-      "bio": "Storage and bare metal. Covers the European on-call window. Builds synthesizers for fun.",
-      "email": "lena.vogel@example.com",
-      "links": {
-        "github": "https://github.com/example"
-      }
-    },
-    {
-      "id": "arjun-mehta",
-      "name": "Arjun Mehta",
-      "role": "Mobile Engineer",
-      "team": "Mobile",
-      "city": "Bengaluru",
-      "country": "India",
-      "lat": 12.9716,
-      "lng": 77.5946,
-      "timezone": "Asia/Kolkata",
-      "bio": "Ships the iOS and Android apps. Performance profiler at heart. Weekend cricket, weekday chai.",
-      "email": "arjun.mehta@example.com",
-      "links": {
-        "github": "https://github.com/example",
-        "linkedin": "https://www.linkedin.com/"
-      }
-    },
-    {
-      "id": "beatriz-almeida",
-      "name": "Beatriz Almeida",
-      "role": "QA Automation Engineer",
-      "team": "Web",
-      "city": "São Paulo",
-      "country": "Brazil",
-      "lat": -23.5505,
-      "lng": -46.6333,
-      "timezone": "America/Sao_Paulo",
-      "bio": "Owns the end-to-end test suite and the release checklist. Finds the bug before you finish describing the feature.",
-      "email": "beatriz.almeida@example.com",
+      "city": "Nashville",
+      "region": "TN",
+      "country": "United States",
+      "lat": 36.1627,
+      "lng": -86.7816,
+      "timezone": "America/Chicago",
+      "bio": "Keeps the lights on and the pager quiet. Observability nerd, weekend snowboarder.",
+      "email": "lucas.ortega@example.com",
       "links": {
         "github": "https://github.com/example"
       }

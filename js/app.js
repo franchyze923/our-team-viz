@@ -147,6 +147,7 @@ async function main() {
   const locationList = [...locations.values()];
 
   const state = { memberId: null, locationKey: null, query: '' };
+  let lastSelectAt = 0;
 
   /* --- header --- */
 
@@ -188,6 +189,11 @@ async function main() {
       h('span', { class: 'pin-label mono' }, count > 1 ? loc.city : loc.members[0].name),
     );
     loc.el.style.pointerEvents = 'auto';
+    // The globe listens for pointer events on the shared container and would treat a press on a
+    // pin as a click on the globe underneath it, which clears the selection a frame later.
+    for (const type of ['pointerdown', 'pointerup', 'click']) {
+      loc.el.addEventListener(type, (e) => e.stopPropagation());
+    }
   }
 
   /* --- globe --- */
@@ -232,7 +238,10 @@ async function main() {
       el.style.opacity = visible ? '1' : '0';
       el.style.pointerEvents = visible ? 'auto' : 'none';
     })
-    .onGlobeClick(() => clearSelection())
+    .onGlobeClick(() => {
+      // Ignore a globe click that lands right after a selection was made.
+      if (performance.now() - lastSelectAt > 400) clearSelection();
+    })
     .pointOfView(homeView(), 0);
 
   const material = globe.globeMaterial();
@@ -405,6 +414,7 @@ async function main() {
     if (!member) return;
     state.memberId = id;
     state.locationKey = member.locationKey;
+    lastSelectAt = performance.now();
     setHash(id);
     closeRoster();
     render();
@@ -417,6 +427,7 @@ async function main() {
     if (!loc) return;
     state.memberId = null;
     state.locationKey = key;
+    lastSelectAt = performance.now();
     setHash('');
     closeRoster();
     render();

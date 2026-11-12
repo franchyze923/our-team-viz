@@ -30,7 +30,7 @@ Everything comes from `data/team.json`. Everyone in it except Francis is a ficti
 | `lat`, `lng` | Decimal degrees. People within about 10 km share one pin. |
 | `timezone` | IANA name such as `America/Chicago`. Drives the live local time. |
 | `links` | Optional `github` / `linkedin` URLs (any other key is shown by its name). |
-| `avatar` | Optional image URL or path. Initials are used when it is absent. |
+| `avatar` | Optional image URL or path, e.g. `assets/avatars/francis.jpg`. Square images work best. Initials are used when it is absent. |
 
 The starting camera position is `HOME` at the top of `js/app.js`.
 
@@ -41,6 +41,7 @@ index.html        page shell
 css/styles.css    theme and layout
 js/app.js         globe, roster, profile panel
 data/team.json    the team
+assets/avatars/   profile photos, named by member id
 vendor/           globe.gl 2.46.2 and Natural Earth country outlines
 ```
 

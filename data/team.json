@@ -31,7 +31,8 @@
       "links": {
         "github": "https://github.com/example",
         "linkedin": "https://www.linkedin.com/"
-      }
+      },
+      "avatar": "assets/avatars/maya-chen.jpg"
     },
     {
       "id": "marcus-bell",
@@ -48,7 +49,8 @@
       "email": "marcus.bell@example.com",
       "links": {
         "github": "https://github.com/example"
-      }
+      },
+      "avatar": "assets/avatars/marcus-bell.jpg"
     },
     {
       "id": "jasmine-carter",
@@ -65,7 +67,8 @@
       "email": "jasmine.carter@example.com",
       "links": {
         "linkedin": "https://www.linkedin.com/"
-      }
+      },
+      "avatar": "assets/avatars/jasmine-carter.jpg"
     },
     {
       "id": "lucas-ortega",
@@ -82,7 +85,8 @@
       "email": "lucas.ortega@example.com",
       "links": {
         "github": "https://github.com/example"
-      }
+      },
+      "avatar": "assets/avatars/lucas-ortega.jpg"
     }
   ]
 }

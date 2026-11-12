@@ -237,6 +237,7 @@ ul { list-style: none; }
   top: 78px;
   right: 24px;
   width: 350px;
+  max-width: calc(100vw - 48px);
   max-height: calc(100% - 150px);
   overflow-y: auto;
   padding: 22px;
@@ -290,7 +291,7 @@ ul { list-style: none; }
 
 .fields {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1px;
   margin-top: 16px;
   background: var(--line);
@@ -363,12 +364,15 @@ ul { list-style: none; }
 
 .photos {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  /* minmax(0, …) stops large images from stretching the columns wider than the card */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
   margin-top: 18px;
 }
 .photo {
   display: block;
+  width: 100%;
+  min-width: 0;
   padding: 0;
   aspect-ratio: 1;
   overflow: hidden;
@@ -387,7 +391,7 @@ ul { list-style: none; }
   transition: scale 0.25s;
 }
 .photo:hover img { scale: 1.05; }
-.photos.n1 { grid-template-columns: 1fr; }
+.photos.n1 { grid-template-columns: minmax(0, 1fr); }
 .photos.n2 .photo { aspect-ratio: 3 / 4; }
 .photos.n3 .photo:first-child { grid-column: span 2; aspect-ratio: 2 / 1; }
 

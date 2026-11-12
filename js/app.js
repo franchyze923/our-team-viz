@@ -753,9 +753,49 @@ async function main() {
     },
     { passive: false, capture: true },
   );
-  // Safari reports pinches as gesture events.
-  for (const type of ['gesturestart', 'gesturechange']) {
-    document.addEventListener(type, (e) => e.preventDefault(), { passive: false });
+  // Safari reports pinches as gesture events rather than ctrl+wheel. Block its page magnification
+  // and turn the pinch into globe zoom instead.
+  let gestureScale = 1;
+  document.addEventListener(
+    'gesturestart',
+    (e) => {
+      e.preventDefault();
+      gestureScale = 1;
+    },
+    { passive: false },
+  );
+  document.addEventListener(
+    'gesturechange',
+    (e) => {
+      e.preventDefault();
+      const deltaY = (gestureScale - e.scale) * 400;
+      gestureScale = e.scale;
+      canvas.dispatchEvent(
+        new WheelEvent('wheel', { deltaY, clientX: e.clientX, clientY: e.clientY, bubbles: true, cancelable: true }),
+      );
+    },
+    { passive: false },
+  );
+
+  // If the page still ends up magnified (a pinch the handlers above could not intercept), the panels
+  // hang off the edges of the window. Say so, since a small magnification is easy to miss.
+  const viewport = window.visualViewport;
+  if (viewport) {
+    const notice = h('div', { id: 'zoom-notice', class: 'mono', role: 'status', hidden: true });
+    document.body.append(notice);
+    const checkMagnification = () => {
+      const magnified = viewport.scale > 1.01;
+      notice.hidden = !magnified;
+      if (!magnified) return;
+      notice.textContent = `Page magnified to ${Math.round(viewport.scale * 100)}% · pinch out to reset`;
+      // Fixed elements follow the layout viewport, so place the notice inside the visible part.
+      notice.style.left = `${viewport.offsetLeft + viewport.width / 2}px`;
+      notice.style.top = `${viewport.offsetTop + 10 / viewport.scale}px`;
+      notice.style.scale = String(1 / viewport.scale);
+    };
+    viewport.addEventListener('resize', checkMagnification);
+    viewport.addEventListener('scroll', checkMagnification);
+    checkMagnification();
   }
 
   addEventListener('keydown', (e) => {

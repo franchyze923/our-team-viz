@@ -730,6 +730,12 @@ async function main() {
   addEventListener(
     'wheel',
     (e) => {
+      // If the page is already magnified, a pinch-out anywhere must reach the browser so it can undo
+      // that. Keep it away from the globe, which would otherwise swallow it.
+      if (e.ctrlKey && e.deltaY > 0 && window.visualViewport?.scale > 1.01) {
+        e.stopImmediatePropagation();
+        return;
+      }
       if (e.target === canvas) return;
       const overPin = e.target instanceof Element && e.target.closest('.pin');
       if (overPin) {

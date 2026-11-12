@@ -13,7 +13,8 @@
       "country": "United States",
       "lat": 39.9526,
       "lng": -75.1652,
-      "timezone": "America/New_York"
+      "timezone": "America/New_York",
+      "avatar": "assets/avatars/francis.jpg"
     },
     {
       "id": "maya-chen",

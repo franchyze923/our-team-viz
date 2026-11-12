@@ -246,8 +246,10 @@ async function main() {
       // Ignore a globe click that lands right after a selection was made.
       if (performance.now() - lastSelectAt > 400) clearSelection();
     })
-    .onGlobeReady(() => globe.pointOfView(homeView(), 0))
     .pointOfView(homeView(), 0);
+
+  // Re-apply the view once the first frame is drawn so pin visibility is recalculated.
+  requestAnimationFrame(() => globe.pointOfView(homeView(), 0));
 
   const material = globe.globeMaterial();
   material.color.set('#050b1d');
